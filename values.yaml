@@ -1,0 +1,26 @@
+# Default values for chart-repos.
+instance:
+  namespace: kube-system
+  name: my-chart-repos
+  replicaCount: 1
+  nodeSelector:
+    enable: true
+    key: kubernetes.io/hostname
+    value: ntas-cd-demo-fedora.localdomain
+
+volumes:
+  serverRoot:
+    name: server-root
+    src: /var/chart-repo
+    dest: /usr/share/nginx/html
+
+image:
+  repository: nginx
+  tag: 1212
+  pullPolicy: IfNotPresent
+
+service:
+  name: mynginx
+  type: ClusterIP
+  externalPort: 8088
+  internalPort: 80
