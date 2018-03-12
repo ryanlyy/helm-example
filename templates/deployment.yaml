@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: {{.Values.instance.name}}
+  name: {{.Values.instance.name}}
+  namespace: {{.Values.instance.namespace}}
+spec:
+  replicas: {{.Values.instance.replicaCount}}
+  selector:
+    matchLabels:
+      name: {{.Values.instance.name}}
+  template:
+    metadata:
+      labels:
+        name: {{.Values.instance.name}}
+    spec:
+      containers:
+      - image: {{.Values.image.repository}}:{{.Values.image.tag}}
+        imagePullPolicy: {{.Values.image.pullPolicy}}
+        name: {{.Values.instance.name}}
+        volumeMounts:
+        - mountPath: {{.Values.volumes.serverRoot.dest}}
+          name: {{.Values.volumes.serverRoot.name}}
+        - mountPath: /etc/resolv.conf
+          name: resolv
+      restartPolicy: Always
+{{- if .Values.instance.nodeSelector.enable }}
+      nodeSelector:
+        {{.Values.instance.nodeSelector.key}}: {{.Values.instance.nodeSelector.value}}
+{{- end }}
+      securityContext: {}
+      volumes:
+      - hostPath:
+          path: {{.Values.volumes.serverRoot.src}}
+          type: ""
+        name: {{.Values.volumes.serverRoot.name}}
+      - hostPath:
+          path: /etc/resolv.conf
+          type: ""
+        name: resolv
