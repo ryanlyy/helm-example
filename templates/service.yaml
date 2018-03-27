@@ -13,5 +13,5 @@ spec:
     protocol: TCP
     targetPort: {{.Values.service.internalPort}}
   selector:
-    name: {{.Values.service.name}}
+    name: {{.Values.instance.name}}
   type: {{.Values.service.type}}
